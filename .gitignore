@@ -1,2 +1,5 @@
 .idea/
 venv/
+test.py
+__pycache__/
+app.db
