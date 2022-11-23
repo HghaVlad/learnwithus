@@ -9,6 +9,7 @@ from tables.posted_orders import PostedOrder
 from tables.users import User
 
 app = create_app(Config)
+app.register_blueprint("user_page.bl")
 
 
 @app.route("/")

@@ -20,3 +20,9 @@ class Executor(db.Model):
 
     def __repr__(self):
         return f"Executor {self.id}"
+
+    def new_executor(self, name, surname, grade, user_id):
+        self.name = name
+        self.surname = surname
+        self.grade = grade
+        self.user_id = user_id

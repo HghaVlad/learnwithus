@@ -1,4 +1,6 @@
-from database import db
+from ..database import db
+from .customers import Customer
+from .executors import Executor
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -21,3 +23,27 @@ class User(db.Model):
 
     def __repr__(self):
         return f"User {self.id}"
+
+    def reg_user(self, login, password, name, surname, grade):
+        self.login = login
+        self.set_password(password)
+        db.session.add(self)
+        new_customer = Customer()
+        new_customer.new_customer(name, surname, grade, self.id)
+        db.session.add(new_customer)
+        db.session.commit()
+
+    def reg_executor(self, login, password, name, surname, grade):
+        self.login = login
+        self.set_password(password)
+        db.session.add(self)
+        new_executor = Executor()
+        new_executor.new_executor(name, surname, grade, self.id)
+        db.session.add(new_executor)
+        db.session.commit()
+
+    def reg_admin(self, login, password):
+        self.login = login
+        self.set_password(password)
+        db.session.add(self)
+        db.session.commit()

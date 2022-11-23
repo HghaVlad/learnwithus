@@ -20,3 +20,9 @@ class Customer(db.Model):
 
     def __repr__(self):
         return f"Customer {self.id}"
+
+    def new_customer(self, name, surname, grade, user_id):
+        self.name = name
+        self.surname = surname
+        self.grade = grade
+        self.user_id = user_id
