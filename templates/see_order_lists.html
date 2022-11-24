@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h3>доступные заявка</h3>
+    {% for order in orders %}
+        <h3>ФИО:</h3> <h5>{{ order.customer.name }}</h5>
+        <h3>Класс:</h3> <h5>{{ order.customer.grade }}</h5>
+        <h3>Описание:</h3> <h5>{{ order.description }}</h5>
+        <h3>Предмет:</h3> <h5>{{ order.subject }}</h5>
+        <h3><a href="/accept_order?order_id={{ order.id }}">Ответить на запрос</a> </h3>
+    {% endfor %}
+
+</body>
+
+</html>

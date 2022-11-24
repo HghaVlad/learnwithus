@@ -1,5 +1,5 @@
 from database import db
-
+from active_orders import ActiveOrder
 
 class PostedOrder(db.Model):
     """класс размещённых заказов"""
@@ -15,4 +15,3 @@ class PostedOrder(db.Model):
 
     def __repr__(self):
         return f"Posted order {self.id}"
-

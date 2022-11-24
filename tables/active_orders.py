@@ -1,5 +1,5 @@
 from database import db
-
+from history_orders import HistoryOrder
 
 class ActiveOrder(db.Model):
     """класс принятых заказов"""
@@ -19,3 +19,18 @@ class ActiveOrder(db.Model):
 
     def __repr__(self):
         return f"History order {self.id}"
+
+    def make_order(self, posted_order, executor_id, telegram_link):
+        self.subject = posted_order.subject
+        self.description = posted_order.description
+        self.telegram_link = telegram_link
+        self.customer_id = posted_order.customer_id
+        self.executor_id = executor_id
+        db.session.add(self)
+        db.session.commit()
+
+    def finish_order(self):
+        history_oder = HistoryOrder()
+        history_oder.make(self)
+        db.session.add(history_oder)
+        db.session.commit()

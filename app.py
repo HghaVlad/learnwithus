@@ -1,6 +1,7 @@
 from app_config import Config
 from create_app import create_app
 from database import db
+import user_view
 from tables.active_orders import ActiveOrder
 from tables.customers import Customer
 from tables.executors import Executor
@@ -9,7 +10,7 @@ from tables.posted_orders import PostedOrder
 from tables.users import User
 
 app = create_app(Config)
-app.register_blueprint("user_page.bl")
+app.register_blueprint(user_view.bl)
 
 
 @app.route("/")

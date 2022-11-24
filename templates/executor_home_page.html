@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer home page</title>
+</head>
+<body>
+    <h3><a href="/order_lists">Список заявок</a> </h3>
+    <h3>Мои принятые заявки</h3>
+    {% for order in orders %}
+        <h3>ФИО:</h3> <h5>{{ order.customer.name }}</h5>
+        <h3>Класс:</h3> <h5>{{ order.customer.grade }}</h5>
+        <h3>Описание:</h3> <h5>{{ order.description }}</h5>
+        <h3>Ссылка на тг:</h3> <h5>{{ order.telegram_link }}</h5>
+        <button onclick="end_order('{{ order.id }}')" ></button>
+    {% endfor %}
+
+</body>
+
+<script>
+
+    function end_order(id){
+        console.log("Order ended")
+        // Api запрос по адресу /end_executor_oder
+
+    }
+
+</script>
+</html>

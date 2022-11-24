@@ -2,6 +2,8 @@ from flask import Blueprint, session, redirect, render_template, request
 from database import db
 from misc import check_code
 from tables.users import User
+from tables.active_orders import ActiveOrder
+from tables.posted_orders import PostedOrder
 
 bl = Blueprint("user_page", __name__)
 
@@ -51,7 +53,8 @@ def reg_page():
             code = request.form.get("user_code")
             if login and password and name and surname and grade and code:
                 res = check_code(code)
-                if res == 'no':
+                if res == 'no' or len(password) < 6 or len(User.query.filter_by(login=login)) == 1 \
+                        or len(name) <= 4 or len(surname) <= 4:
                     return render_template("login_page.html", answer="Incorrect code"), 403
                 elif res == 'Admin':
                     new_user = User()
@@ -89,6 +92,57 @@ def log_out():
 @bl.route("/home")
 def home_page():
     if 'login' in session:
-        pass
+        user = User.query.filter(id=session['user_id']).first()
+        if user.role == 'Customer':
+            return render_template("customer_home_page.html")
+        elif user.role == "Executor":
+            orders = ActiveOrder.query.filter(executor_id=user.id).all()
+            return render_template("executor_home_page.html", orders=orders)
+        elif user.role == "Admin":
+            orders = ActiveOrder.query.filter().all()
+            return render_template("executor_home_page.html", orders=orders)
+        else:
+            session.clear()
+            return redirect("/")
     else:
         return redirect('/')
+
+
+# Список заявок исполнителя
+@bl.route("/order_lists")
+def order_lists():
+    if 'login' in session:
+        user = User.query.filter(id=session['user_id']).first()
+        if user.role == "Executor":
+            orders = PostedOrder.query.all()
+            return render_template("see_order_lists.html", orders=orders)
+
+    session.clear()
+    return redirect("/")
+
+
+# Принять заявку исполнителем
+@bl.route("/accept_order")
+def accept_order(order_id):
+    if 'login' in session:
+        user = User.query.filter(id=session['user_id']).first()
+        if user.role == "Executor":
+            if request.method == "POST":
+                telegram_link = request.form.get("telegram_link")
+                if telegram_link:
+                    post_order = PostedOrder.query.filter(id=order_id)
+                    new_order = ActiveOrder()
+                    new_order.make_order(post_order, session['user_id'], telegram_link)
+                    return redirect("/order_lists")
+            else:
+                return render_template("accept_order.html")
+
+
+# Завершить заявку исполнителем
+@bl.route("/finish_order") # Надо будет проработать механизм завершения
+def finish_order(order_id):
+    order = ActiveOrder.query.filter(id=order_id)
+    order.finish()
+    db.session.delete(order)
+    db.session.commit()
+    return "Finished"

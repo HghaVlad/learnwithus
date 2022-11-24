@@ -1,4 +1,4 @@
-from ..database import db
+from database import db
 from .customers import Customer
 from .executors import Executor
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -12,6 +12,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(), nullable=False)
     password_hash = db.Column(db.String())
+    role = db.Column(db.String())  # Роль пользователя(customer/executor/admin)
 
     customer_roles = db.relationship("Customer", backref="user")
 
