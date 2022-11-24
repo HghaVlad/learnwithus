@@ -101,11 +101,9 @@ def home_page():
         elif user.role == "Admin":
             orders = ActiveOrder.query.filter().all()
             return render_template("executor_home_page.html", orders=orders)
-        else:
-            session.clear()
-            return redirect("/")
-    else:
-        return redirect('/')
+
+    session.clear()
+    return redirect("/")
 
 
 # Список заявок исполнителя
@@ -137,12 +135,72 @@ def accept_order(order_id):
             else:
                 return render_template("accept_order.html")
 
+    session.clear()
+    return redirect("/")
+
 
 # Завершить заявку исполнителем
-@bl.route("/finish_order") # Надо будет проработать механизм завершения
+@bl.route("/finish_order")  # Надо будет проработать механизм завершения
 def finish_order(order_id):
     order = ActiveOrder.query.filter(id=order_id)
     order.finish()
     db.session.delete(order)
     db.session.commit()
     return "Finished"
+
+
+# Создать заявку закачкиком
+@bl.route("/add_order")
+def customer_make_order():
+    if 'login' in session:
+        user = User.query.filter(id=session['user_id']).first()
+        if user.role == "Customer":
+            if request.method == "POST":
+                subject = request.form.get("order_subject")
+                description = request.form.get("order_subject")
+                if subject and description:
+                    new_order = PostedOrder()
+                    new_order.make_order(subject, description, user.id)
+                    return redirect("/home")
+                else:
+                    return render_template("add_order.html", answer="Enter all values")
+            else:
+                return render_template("add_order.html")
+
+    session.clear()
+    return redirect("/")
+
+
+# Созданые заказчиком заявки
+@bl.route("/my_orders")
+def customer_orders():
+    if 'login' in session:
+        user = User.query.filter(id=session['user_id']).first()
+        if user.role == "Customer":
+            orders = PostedOrder.query.filter(customer_id=user.id).all()
+            return render_template("my_orders.html", orders=orders)
+
+    session.clear()
+    return redirect("/")
+
+
+# Отменить заявку заказчиком
+@bl.route("/cancel_order")
+def delete_order(order_id):
+    order = PostedOrder.query.filter(id=order_id).first()
+    db.session.remove(order)
+    db.session.commit()
+    return "Finished"
+
+
+# Просмотр активных заявок заказчиком
+@bl.route("/active_orders")
+def active_orders():
+    if 'login' in session:
+        user = User.query.filter(id=session['user_id']).first()
+        if user.role == "Customer":
+            orders = ActiveOrder.query.filter(customer_id=user.id).all()
+            return render_template("customer_active_orders.html", orders=orders)
+
+    session.clear()
+    return redirect("/")

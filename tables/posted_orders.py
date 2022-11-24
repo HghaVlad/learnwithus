@@ -15,3 +15,10 @@ class PostedOrder(db.Model):
 
     def __repr__(self):
         return f"Posted order {self.id}"
+
+    def make_order(self, subject, description, customer_id):
+        self.subject = subject
+        self.description = description
+        self.customer_id = customer_id
+        db.session.add(self)
+        db.session.commit()

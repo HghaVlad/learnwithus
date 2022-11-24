@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    {% for order in orders %}
+      {{ order.subject }}
+      {{ order.description }}
+    <a href="/cancel_order?order_id={{ order.id }}">Cancel order</a>
+    {% endfor %}
+
+</body>
+</html>
