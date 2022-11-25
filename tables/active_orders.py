@@ -1,5 +1,6 @@
 from database import db
-from history_orders import HistoryOrder
+from tables.history_orders import HistoryOrder
+
 
 class ActiveOrder(db.Model):
     """класс принятых заказов"""

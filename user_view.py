@@ -26,9 +26,9 @@ def login_page():
             login = request.form.get("user_login")
             password = request.form.get("user_password")
             if login and password:
-                user = User.query.filter_by(login=login)
+                user = User.query.filter_by(login=login).first()
                 if user:
-                    if user.first().check_password(password):
+                    if user.check_password(password):
                         session.clear()
                         session['login'] = user.login
                         session['user_id'] = user.id
@@ -51,9 +51,11 @@ def reg_page():
             surname = request.form.get("user_surname")
             grade = request.form.get("user_grade")
             code = request.form.get("user_code")
+            print(login, password, name, surname, grade, code, 'h')
+            print(User.query.filter_by(login=login).first())
             if login and password and name and surname and grade and code:
                 res = check_code(code)
-                if res == 'no' or len(password) < 6 or len(User.query.filter_by(login=login)) == 1 \
+                if res == 'no' or len(password) < 6 or len(User.query.filter_by(login=login).all()) == 1 \
                         or len(name) <= 4 or len(surname) <= 4:
                     return render_template("login_page.html", answer="Incorrect code"), 403
                 elif res == 'Admin':
@@ -68,7 +70,8 @@ def reg_page():
                     session['user_id'] = new_user.id
                 return redirect("/home")
             elif login and password and name and surname and grade:
-                if len(password) > 6 and len(User.query.filter_by(login=login)) == 0 \
+                print("it")
+                if len(password) > 6 and len(User.query.filter_by(login=login).all()) == 0 \
                         and len(name) > 4 and len(surname) > 4:
                     new_user = User()
                     new_user.reg_user(login, password, name, surname, grade)
@@ -77,7 +80,7 @@ def reg_page():
                     session['user_id'] = new_user.id
                     return redirect("/home")
 
-            return render_template("login_page.html", answer="Complete all fields"), 403
+            return render_template("reg_page.html", answer="Complete all fields"), 403
         else:
             return render_template("reg_page.html")
 
@@ -92,14 +95,14 @@ def log_out():
 @bl.route("/home")
 def home_page():
     if 'login' in session:
-        user = User.query.filter(id=session['user_id']).first()
+        user = User.query.filter_by(id=session['user_id']).first()
         if user.role == 'Customer':
             return render_template("customer_home_page.html")
         elif user.role == "Executor":
-            orders = ActiveOrder.query.filter(executor_id=user.id).all()
+            orders = ActiveOrder.query.filter_by(executor_id=user.executor_id()).all()
             return render_template("executor_home_page.html", orders=orders)
         elif user.role == "Admin":
-            orders = ActiveOrder.query.filter().all()
+            orders = ActiveOrder.query.filter_by().all()
             return render_template("executor_home_page.html", orders=orders)
 
     session.clear()
@@ -110,7 +113,7 @@ def home_page():
 @bl.route("/order_lists")
 def order_lists():
     if 'login' in session:
-        user = User.query.filter(id=session['user_id']).first()
+        user = User.query.filter_by(id=session['user_id']).first()
         if user.role == "Executor":
             orders = PostedOrder.query.all()
             return render_template("see_order_lists.html", orders=orders)
@@ -120,17 +123,20 @@ def order_lists():
 
 
 # Принять заявку исполнителем
-@bl.route("/accept_order")
-def accept_order(order_id):
+@bl.route("/accept_order", methods=["POST", "GET"])
+def accept_order():
+    order_id = request.args.get("order_id")
     if 'login' in session:
-        user = User.query.filter(id=session['user_id']).first()
+        user = User.query.filter_by(id=session['user_id']).first()
         if user.role == "Executor":
             if request.method == "POST":
                 telegram_link = request.form.get("telegram_link")
                 if telegram_link:
-                    post_order = PostedOrder.query.filter(id=order_id)
+                    post_order = PostedOrder.query.filter_by(id=order_id).first()
                     new_order = ActiveOrder()
-                    new_order.make_order(post_order, session['user_id'], telegram_link)
+                    new_order.make_order(post_order, user.executor_id(), telegram_link)
+                    db.session.delete(post_order)
+                    db.session.commit()
                     return redirect("/order_lists")
             else:
                 return render_template("accept_order.html")
@@ -140,27 +146,28 @@ def accept_order(order_id):
 
 
 # Завершить заявку исполнителем
-@bl.route("/finish_order")  # Надо будет проработать механизм завершения
-def finish_order(order_id):
-    order = ActiveOrder.query.filter(id=order_id)
+@bl.route("/finish_order", methods=["POST", "GET"])  # Надо будет проработать механизм завершения
+def finish_order():
+    order_id = request.args.get("order_id")
+    order = ActiveOrder.query.filter_by(id=order_id)
     order.finish()
     db.session.delete(order)
     db.session.commit()
     return "Finished"
 
 
-# Создать заявку закачкиком
-@bl.route("/add_order")
+# Создать заявку заказкиком
+@bl.route("/add_order", methods=["POST", "GET"])
 def customer_make_order():
     if 'login' in session:
-        user = User.query.filter(id=session['user_id']).first()
+        user = User.query.filter_by(id=session['user_id']).first()
         if user.role == "Customer":
             if request.method == "POST":
                 subject = request.form.get("order_subject")
-                description = request.form.get("order_subject")
+                description = request.form.get("order_description")
                 if subject and description:
                     new_order = PostedOrder()
-                    new_order.make_order(subject, description, user.id)
+                    new_order.make_order(subject, description, user.customer_id())
                     return redirect("/home")
                 else:
                     return render_template("add_order.html", answer="Enter all values")
@@ -172,12 +179,12 @@ def customer_make_order():
 
 
 # Созданые заказчиком заявки
-@bl.route("/my_orders")
+@bl.route("/my_orders", methods=["POST", "GET"])
 def customer_orders():
     if 'login' in session:
-        user = User.query.filter(id=session['user_id']).first()
+        user = User.query.filter_by(id=session['user_id']).first()
         if user.role == "Customer":
-            orders = PostedOrder.query.filter(customer_id=user.id).all()
+            orders = PostedOrder.query.filter_by(customer_id=user.customer_id()).all()
             return render_template("my_orders.html", orders=orders)
 
     session.clear()
@@ -185,10 +192,11 @@ def customer_orders():
 
 
 # Отменить заявку заказчиком
-@bl.route("/cancel_order")
-def delete_order(order_id):
-    order = PostedOrder.query.filter(id=order_id).first()
-    db.session.remove(order)
+@bl.route("/cancel_order", methods=["POST", "GET"])
+def delete_order():
+    order_id = request.args.get("order_id")
+    order = PostedOrder.query.filter_by(id=order_id).first()
+    db.session.delete(order)
     db.session.commit()
     return "Finished"
 
@@ -197,9 +205,9 @@ def delete_order(order_id):
 @bl.route("/active_orders")
 def active_orders():
     if 'login' in session:
-        user = User.query.filter(id=session['user_id']).first()
+        user = User.query.filter_by(id=session['user_id']).first()
         if user.role == "Customer":
-            orders = ActiveOrder.query.filter(customer_id=user.id).all()
+            orders = ActiveOrder.query.filter_by(customer_id=user.customer_id()).all()
             return render_template("customer_active_orders.html", orders=orders)
 
     session.clear()

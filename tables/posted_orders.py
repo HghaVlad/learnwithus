@@ -1,5 +1,5 @@
 from database import db
-from active_orders import ActiveOrder
+
 
 class PostedOrder(db.Model):
     """класс размещённых заказов"""

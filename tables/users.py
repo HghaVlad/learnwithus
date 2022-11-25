@@ -1,6 +1,6 @@
 from database import db
-from .customers import Customer
-from .executors import Executor
+from tables.customers import Customer
+from tables.executors import Executor
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -28,6 +28,7 @@ class User(db.Model):
     def reg_user(self, login, password, name, surname, grade):
         self.login = login
         self.set_password(password)
+        self.role = 'Customer'
         db.session.add(self)
         new_customer = Customer()
         new_customer.new_customer(name, surname, grade, self.id)
@@ -37,6 +38,7 @@ class User(db.Model):
     def reg_executor(self, login, password, name, surname, grade):
         self.login = login
         self.set_password(password)
+        self.role = 'Executor'
         db.session.add(self)
         new_executor = Executor()
         new_executor.new_executor(name, surname, grade, self.id)
@@ -46,5 +48,12 @@ class User(db.Model):
     def reg_admin(self, login, password):
         self.login = login
         self.set_password(password)
+        self.role = 'Admin'
         db.session.add(self)
         db.session.commit()
+
+    def executor_id(self):
+        return Executor.query.filter_by(user_id=self.id).first().id
+
+    def customer_id(self):
+        return Customer.query.filter_by(user_id=self.id).first().id

@@ -1,7 +1,7 @@
 import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
+CODES_PATH = os.path.join(basedir, "codes.txt")
 
 class Config(object):
     """настройка конфига flask приложения"""

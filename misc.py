@@ -1,6 +1,8 @@
+from app_config import CODES_PATH
+
 
 def check_code(code):
-    with open("codes.txt") as file:
+    with open(CODES_PATH) as file:
         admin_code = file.readline()
         executor_code = file.readline()
         if admin_code == code:
