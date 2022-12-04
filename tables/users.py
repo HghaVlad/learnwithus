@@ -30,6 +30,7 @@ class User(db.Model):
         self.set_password(password)
         self.role = 'Customer'
         db.session.add(self)
+        db.session.commit()
         new_customer = Customer()
         new_customer.new_customer(name, surname, grade, self.id)
         db.session.add(new_customer)

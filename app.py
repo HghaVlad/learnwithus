@@ -17,8 +17,6 @@ app.register_blueprint(user_view.bl)
 def test_tables():
     """демонстрация работы с БД"""
 
-
-
     return f"{customer.user} {user.customer_roles} {executor} " \
            f"!{posted_order.description}! ( {posted_order} ) {history_order}" \
            f"{customer.history_orders} {active_order.telegram_link}"

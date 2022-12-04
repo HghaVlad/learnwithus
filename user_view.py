@@ -51,13 +51,11 @@ def reg_page():
             surname = request.form.get("user_surname")
             grade = request.form.get("user_grade")
             code = request.form.get("user_code")
-            print(login, password, name, surname, grade, code, 'h')
-            print(User.query.filter_by(login=login).first())
             if login and password and name and surname and grade and code:
                 res = check_code(code)
                 if res == 'no' or len(password) < 6 or len(User.query.filter_by(login=login).all()) == 1 \
-                        or len(name) <= 4 or len(surname) <= 4:
-                    return render_template("login_page.html", answer="Incorrect code"), 403
+                        or len(name) < 4 or len(surname) < 4:
+                    return render_template("login_page.html", answer="Incorrect code or not all fields completed right"), 403
                 elif res == 'Admin':
                     new_user = User()
                     new_user.reg_admin(login, password)
@@ -70,17 +68,21 @@ def reg_page():
                     session['user_id'] = new_user.id
                 return redirect("/home")
             elif login and password and name and surname and grade:
-                print("it")
-                if len(password) > 6 and len(User.query.filter_by(login=login).all()) == 0 \
-                        and len(name) > 4 and len(surname) > 4:
+                if len(password) >= 6 and len(User.query.filter_by(login=login).all()) == 0 \
+                        and len(name) >= 4 and len(surname) >= 4:
                     new_user = User()
                     new_user.reg_user(login, password, name, surname, grade)
                     session.clear()
                     session['login'] = new_user.login
                     session['user_id'] = new_user.id
                     return redirect("/home")
-
-            return render_template("reg_page.html", answer="Complete all fields"), 403
+                elif len(password) < 6:
+                    return render_template("reg_page.html", answer="Length of the pass should be more than 6")
+                elif len(User.query.filter_by(login=login).all()) == 0:
+                    return render_template("reg_page.html", answer="This login is already taken")
+                elif len(name) < 4 or len(surname) < 4:
+                    return render_template("reg_page.html", answer="Length of the name and second name should be more than 4")
+            return render_template("reg_page.html", answer="Complete all fields. Be sure that size of login, name and second_name is more than 4. And the password's lenght is more than 6.  "), 403
         else:
             return render_template("reg_page.html")
 
@@ -105,8 +107,7 @@ def home_page():
             orders = ActiveOrder.query.filter_by().all()
             return render_template("executor_home_page.html", orders=orders)
 
-    session.clear()
-    return redirect("/")
+    return render_template("404_exception.html")
 
 
 # Список заявок исполнителя
@@ -118,8 +119,7 @@ def order_lists():
             orders = PostedOrder.query.all()
             return render_template("see_order_lists.html", orders=orders)
 
-    session.clear()
-    return redirect("/")
+    return render_template("404_exception.html")
 
 
 # Принять заявку исполнителем
@@ -141,19 +141,30 @@ def accept_order():
             else:
                 return render_template("accept_order.html")
 
-    session.clear()
-    return redirect("/")
+    return render_template("404_exception.html")
 
 
 # Завершить заявку исполнителем
-@bl.route("/finish_order", methods=["POST", "GET"])  # Надо будет проработать механизм завершения
+@bl.route("/finish_order")  # Надо будет проработать механизм завершения
 def finish_order():
-    order_id = request.args.get("order_id")
-    order = ActiveOrder.query.filter_by(id=order_id)
-    order.finish()
-    db.session.delete(order)
-    db.session.commit()
-    return "Finished"
+    if 'login' in session:
+        user = User.query.filter_by(id=session['user_id']).first()
+        order_id = request.args.get("order_id")
+        if user.role == "Customer":
+            order = ActiveOrder.query.filter_by(id=order_id).first()
+            if order.customer.user_id == user.id:
+                order.finish_order()
+                db.session.delete(order)
+                db.session.commit()
+                return redirect("/home")
+        elif user.role == "Executor":
+            order = ActiveOrder.query.filter_by(id=order_id).first()
+            if order.executor.user_id == user.id:
+                order.finish_order()
+                db.session.delete(order)
+                db.session.commit()
+                return redirect("/home")
+        return render_template("404_exception.html")
 
 
 # Создать заявку заказкиком
@@ -174,8 +185,7 @@ def customer_make_order():
             else:
                 return render_template("add_order.html")
 
-    session.clear()
-    return redirect("/")
+    return render_template("404_exception.html")
 
 
 # Созданые заказчиком заявки
@@ -187,8 +197,7 @@ def customer_orders():
             orders = PostedOrder.query.filter_by(customer_id=user.customer_id()).all()
             return render_template("my_orders.html", orders=orders)
 
-    session.clear()
-    return redirect("/")
+    return render_template("404_exception.html")
 
 
 # Отменить заявку заказчиком
@@ -198,7 +207,7 @@ def delete_order():
     order = PostedOrder.query.filter_by(id=order_id).first()
     db.session.delete(order)
     db.session.commit()
-    return "Finished"
+    return redirect("/my_orders")
 
 
 # Просмотр активных заявок заказчиком
@@ -210,5 +219,4 @@ def active_orders():
             orders = ActiveOrder.query.filter_by(customer_id=user.customer_id()).all()
             return render_template("customer_active_orders.html", orders=orders)
 
-    session.clear()
-    return redirect("/")
+    return render_template("404_exception.html")
