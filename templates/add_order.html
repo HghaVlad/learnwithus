@@ -2,16 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add order</title>
+    <title>Создать заказ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
 
-<form action="" method="post">
-    <input name="order_subject">
-    <input name="order_description">
-  <input type="submit" value="no">
+    <div class="root">
 
-</form>
+        <div class="header">
+            <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/logout">Выход</a>
+        </div>
+
+        <div class="main-login">
+            <p class="login-text">Оставить заявку</p>
+            <form method="post" class="login-form">
+                <input class="LG" placeholder="Предмет" name="order_subject" id="order_subject" required>
+                <input class="LG" placeholder="Описание" name="order_description" id="order_description" required>
+                <input class="login_btn" type="submit" value="Создать">
+            </form>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">Контакты: 8-800-555-35-25</p>
+        </div>
+
+    </div>
 
 </body>
 </html>

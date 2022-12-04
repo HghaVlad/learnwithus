@@ -1,24 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+      <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
-<form action="/logup" method="POST">
-      <h4>Enter your login</h4>
-      <input name="user_login">
-      <h4>Enter your password</h4>
-      <input name="user_password">
-      <h4>Enter your name</h4>
-      <input name="user_name">
-      <h4>Enter your surname</h4>
-      <input name="user_surname">
-      <h4>Enter your grade</h4>
-      <input name="user_grade">
-      <h4>Please enter the code</h4>
-      <input name="user_code">
-      <input type="submit" value="Send">
-</form>
+    <div class="root">
+
+      <div class="header">
+            <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/login">Вход</a>
+      </div>
+
+      <div class="main-login">
+        <p class="login-text">Регистрация</p>
+        <form method="post" class="login-form">
+            <input class="LG" placeholder="Логин" name="user_login" id="user_login" required>
+            <input class="LG" placeholder="Пароль" type="password" name="user_password" id="user_password" required>
+            <input class="LG" placeholder="Имя" name="user_name" id="user_name" required>
+            <input class="LG" placeholder="Фамилия" name="user_surname" id="user_surname" required>
+            <input class="LG" placeholder="Класс" name="user_grade" id="user_grade" required>
+            <input class="LG" placeholder="Код" name="user_code" id="user_code">
+            <input class="login_btn" type="submit" value="Вход">
+        </form>
+      </div>
+
+      <div class="footer">
+          <p class="footer-text">Контакты: 8-800-555-35-25</p>
+      </div>
+
+    </div>
+
+
 </body>
 </html>

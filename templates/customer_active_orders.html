@@ -2,16 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Активные заказы</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
 
-  {% for order in orders %}
-        <h3>Subject:</h3> <h5>{{ order.subject }}</h5>
-        <h3>Описание:</h3> <h5>{{ order.description }}</h5>
-        <h3>ФИО исполнителя:</h3> <h5>{{ order.executor.name }}</h5>
-        <h3>Ссылка на тг:</h3> <h5>{{ order.telegram_link }}</h5>
-        <button onclick="end_order('{{ order.id }}')" ></button>
-    {% endfor %}
+    <div class="root">
+
+        <div class="header">
+            <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+        </div>
+        <p class="main-text">Доступные заявки</p>
+
+        {% for order in orders %}
+            <div class="mini-main">
+                <p class="fort-text">Subject:</p> <p class="fort-text">{{ order.subject }}</p>
+                <p class="fort-text">Описание:</p> <p class="fort-text">{{ order.description }}</p>
+                <p class="fort-text">ФИО исполнителя:</p> <p class="fort-text">{{ order.executor.name }}</p>
+                <p class="fort-text">Ссылка на тг:</p> <p class="fort-text">{{ order.telegram_link }}</p>
+                <a href="/finish_order?order_id={{ order.id }}">Завершить</a>
+            </div>
+        {% endfor %}
+
+        <div class="footer">
+            <p class="footer-text">Контакты: 8-800-555-35-25</p>
+        </div>
+
+    </div>
+
 </body>
 </html>

@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Login</title>
+      <meta charset="UTF-8">
+    <title>Register</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
@@ -14,16 +14,15 @@
 
       <div class="header">
           <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+          <a class="LS" href="/login">Вход</a>
           <a class="LS" href="logup">Регистрация</a>
       </div>
 
-      <div class="main-login">
-         <p class="login-text">Вход</p>
-         <form method="post" class="login-form">
-             <input class="LG" placeholder="Логин" name="user_login" id="user_login" required>
-             <input class="LG" placeholder="Пароль" type="password" name="user_password" id="user_password" required>
-             <input class="login_btn" type="submit" value="Вход">
-         </form>
+      <div class="main">
+          <p class="main-text">Ошибка 404!</p>
+          <p class="not-main-text">
+                Приносим наши искренние извинения, но данной страницы на сайте не существует...</p>
+
       </div>
 
       <div class="footer">

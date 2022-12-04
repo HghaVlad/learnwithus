@@ -6,7 +6,7 @@ def create_app(config_obj):
 
     from tables.all_modules import Customer, Executor, User, PostedOrder, HistoryOrder
 
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder="static")
     app.config.from_object(config_obj)
 
     from database import init_db

@@ -2,12 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customer home page</title>
+    <title>Ваша страница</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
 <body>
-    <h3><a href="/add_order">Оставить заявку</a> </h3>
-    <h3><a href="/my_orders">Мои заявки</a> </h3>
-    <h3><a href="/active_orders">Ответы на мои заявки</a> </h3>
+    <div class="root">
+        <div class="header">
+            <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/logout">Выход</a>
+        </div>
+
+        <div class="mini-main">
+
+            <form action="{{ url_for('user_page.customer_make_order') }}">
+                <button class="login_btn">Оставить заявку</button>
+            </form>
+
+            <form action="{{ url_for('user_page.customer_orders') }}">
+                <button class="login_btn">Мои заявки</button>
+            </form>
+
+            <form action="{{ url_for('user_page.active_orders') }}">
+                <button class="login_btn">Ответы на заказы</button>
+            </form>
+
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">Контакты: 8-800-555-35-25</p>
+        </div>
+
+    </div>
 
 </body>
 </html>

@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Startpage</title>
+    <title>LWU</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
 
-    <h3><a href="/login">Click here to login</a></h3>
-    <h3><a href="/logup">Click here to logup</a></h3>
+    <div class="root">
+
+        <div class="header">
+            <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/login">Вход</a>
+            <a class="LS" href="/logup">Регистрация</a>
+        </div>
+
+        <div class="main">
+            <p class="main-text">Learn with us!</p>
+            <p class="not-main-text">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+            <form action="{{ url_for('user_page.login_page') }}">
+                <button class="body_btn">Вход</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">Контакты: 8-800-555-35-25</p>
+        </div>
+
+    </div>
 
 </body>
 </html>

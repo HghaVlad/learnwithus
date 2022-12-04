@@ -1,16 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Принять заказ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
 
-<form action="" method="post">
-   <h4>Enter your tg link</h4>
-      <input name="telegram_link">
-    <input type="submit" value="Send">
-</form>
+    <div class="root">
+
+        <div class="header">
+            <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/logout">Выход</a>
+        </div>
+
+        <div class="main-login">
+            <p class="login-text">Вставьте ссылку на чат в телеграм</p>
+            <form method="post" class="login-form">
+                <input class="LG" placeholder="Ссылка на чат в телеграм" name="telegram_link" id="telegram_link" required>
+                <input class="login_btn" type="submit" value="Отправить">
+            </form>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">Контакты: 8-800-555-35-25</p>
+        </div>
+
+    </div>
 
 </body>
 </html>

@@ -1,0 +1,236 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    height: auto;
+}
+
+body {
+    min-height: 100%;
+    padding-bottom: 48px;
+    font-family: IBM Plex Sans,Roboto,Helvetica Neue, Arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+div {
+    display: block;
+}
+
+.header {
+    position: sticky;
+    z-index: 10;
+    top: 0px;
+    display: flex;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    box-shadow: rgb(0 0 0 / 25%) 0px 4px 32px;
+    border-bottom: 1px solid rgb(235, 237, 240);
+    height: 7rem;
+    padding: 0px 9vw;
+    background-color: rgb(255, 255, 255);
+    user-select: none;
+    padding-left: 22rem;
+    padding-right: 22rem;
+}
+
+.main {
+    border-radius: 22px;
+    flex-shrink: 0;
+    margin-top: 10rem;
+    max-width: 74rem;
+    height: auto;
+    width: 80%;
+    box-shadow: rgb(0 0 0 / 30%) 0px 20px 40px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 2.5rem;
+    text-align: center;
+    padding-top: 5.5rem;
+}
+
+.LS {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 0px 1.5rem;
+    font-size: 19px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    transition: color 0.1s ease 0s;
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+    color: black;
+}
+
+.logo {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 0 16px;
+    margin-right: auto;
+    font-size: 24px;
+    font-weight: 500;
+    color: rgb(69, 79, 91);
+    text-decoration: none;
+}
+
+.main-text {
+    font-size: 43px;
+    color: black;
+    max-width: 35rem;
+    width: 50vw;
+    font-weight: bold;
+    line-height: 64px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
+}
+
+.not-main-text {
+    font-size: 20px;
+    color: black;
+    max-width: 48rem;
+    width: 48vw;
+    margin-top: 40px;
+    line-height: 40px;
+    letter-spacing: 0.02em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5rem;
+}
+
+button {
+    border-radius: 5px;
+    background: #FEBD59;
+    box-shadow: rgb(0 0 0 / 25%) 0px 4px 32px;
+    height: 4.5rem;
+    font-weight: bold;
+    width: 15rem;
+    color: black;
+    font-size: 22px;
+    vertical-align: middle;
+    font-weight: medium;
+    border-style: none;
+    margin-bottom: 2rem;
+}
+
+button:hover {
+    border-radius: 5px;
+    background: #FFC163;
+    font-weight: bold;
+    box-shadow: rgb(0 0 0 / 30%) 0px 7px 32px;
+    height: 4.5rem;
+    width: 15rem;
+    color: black;
+    font-size: 22px;
+    vertical-align: middle;
+    font-weight: medium;
+    border-style: none;
+    margin-bottom: 2rem;
+}
+
+.login_btn {
+    border-radius: 5px;
+    background: #FEBD59;
+    box-shadow: rgb(0 0 0 / 25%) 0px 4px 32px;
+    height: 4.5rem;
+    font-weight: bold;
+    width: 15rem;
+    color: black;
+    font-size: 22px;
+    vertical-align: middle;
+    font-weight: medium;
+    border-style: none;
+    margin-bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5rem;
+}
+
+.footer {
+    height: 10rem;
+    left: 0;
+    bottom: 0;
+    color: black;
+    width: 100%;
+    text-align: center;
+    padding-top: 7rem;
+}
+
+.footer-text {
+    color: black;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.main-login {
+    border-radius: 22px;
+    max-width: 28rem;
+    height: auto;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10rem;
+    box-shadow: rgb(0 0 0 / 30%) 0px 20px 40px;
+    padding-top: 4rem;
+    padding-bottom: 3rem;
+}
+
+.login-text {
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.login-form {
+    transition: filter 0.1s ease 0s;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.LG {
+    border-radius: 2px;
+    margin-top: 4rem;
+    max-width: 16rem;
+    height: 4rem;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 18px;
+    padding-left: 2rem;
+    border: 1px solid black;
+    color: black;
+}
+
+.mini-main {
+    border-radius: 22px;
+    flex-shrink: 0;
+    margin-top: 44px;
+    max-width: 50rem;
+    height: auto;
+    width: 80vw;
+    box-shadow: rgb(0 0 0 / 20%) 0px 20px 40px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    text-align: center;
+}
+
+.fort-text {
+    font-size: 20px;
+    color: black;
+    max-width: 48rem;
+    width: 48vw;
+    margin-top: 40px;
+    line-height: 40px;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+}

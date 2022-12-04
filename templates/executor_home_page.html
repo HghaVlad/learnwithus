@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Customer home page</title>
+    <title>Ваша страница</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
-    <h3><a href="/order_lists">Список заявок</a> </h3>
-    <h3>Мои принятые заявки</h3>
-    {% for order in orders %}
-        <h3>ФИО:</h3> <h5>{{ order.customer.name }}</h5>
-        <h3>Класс:</h3> <h5>{{ order.customer.grade }}</h5>
-        <h3>Описание:</h3> <h5>{{ order.description }}</h5>
-        <h3>Ссылка на тг:</h3> <h5>{{ order.telegram_link }}</h5>
-        <button onclick="end_order('{{ order.id }}')" ></button>
-    {% endfor %}
+
+    <div class="root">
+
+        <form action="{{ url_for('user_page.order_lists') }}">
+            <button class="body_btn">Список заявок</button>
+        </form>
+
+        <p class="main-text">Мои принятые заявки</p>
+        {% for order in orders %}
+            <div class="mini-main">
+                <p class="fort-text">ФИО:</p> <p class="fort-text">{{ order.customer.name }}</p>
+                <p class="fort-text">Класс:</p> <p class="fort-text">{{ order.customer.grade }}</p>
+                <p class="fort-text">Описание:</p> <p class="fort-text">{{ order.description }}</p>
+                <p class="fort-text">Ссылка на тг:</p> <p class="fort-text">{{ order.telegram_link }}</p>
+                <a href="/finish_order?order_id={{ order.id }}">Завершить</a>
+            </div>
+        {% endfor %}
+
+    </div>
 
 </body>
 

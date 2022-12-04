@@ -1,16 +1,36 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Заказы</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
 </head>
+
 <body>
 
-    {% for order in orders %}
-      {{ order.subject }}
-      {{ order.description }}
-    <a href="/cancel_order?order_id={{ order.id }}">Cancel order</a>
-    {% endfor %}
+    <div class="root">
 
+        <div class="header">
+                <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+                <a class="LS" href="/logout">Выход</a>
+        </div>
+
+        {% for order in orders %}
+            <div class="mini-main">
+                <p class="main-text">{{ order.subject }}</p>
+                <p class="not-main-text">{{ order.description }}</p>
+                <p class="fort-text"><a href="/cancel_order?order_id={{ order.id }}">Отменить заказ</a> </p>
+            </div>
+        {% endfor %}
+
+        <div class="footer">
+            <p class="footer-text">Контакты: 8-800-555-35-25</p>
+        </div>
+
+    </div>
 </body>
+
 </html>
