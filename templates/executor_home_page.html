@@ -11,9 +11,11 @@
 
     <div class="root">
 
-        <form action="{{ url_for('user_page.order_lists') }}">
-            <button class="body_btn">Список заявок</button>
-        </form>
+        <div class="mini-main">
+            <form action="{{ url_for('user_page.order_lists') }}">
+                <button class="body_btn">Список заявок</button>
+            </form>
+        </div>
 
         <p class="main-text">Мои принятые заявки</p>
         {% for order in orders %}
@@ -22,21 +24,16 @@
                 <p class="fort-text">Класс:</p> <p class="fort-text">{{ order.customer.grade }}</p>
                 <p class="fort-text">Описание:</p> <p class="fort-text">{{ order.description }}</p>
                 <p class="fort-text">Ссылка на тг:</p> <p class="fort-text">{{ order.telegram_link }}</p>
-                <a href="/finish_order?order_id={{ order.id }}">Завершить</a>
+                <button class="body_btn" onclick="end_ord({{ order.id }})">Удалить</button>
             </div>
         {% endfor %}
 
     </div>
+<script>
+    function end_ord(order_id){
+        document.location.href = "/finish_order?order_id="+order_id
+    }
+    </script>
 
 </body>
-
-<script>
-
-    function end_order(id){
-        console.log("Order ended")
-        // Api запрос по адресу /finish_order
-
-    }
-
-</script>
 </html>
