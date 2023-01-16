@@ -3,8 +3,10 @@ from database import db
 from misc import check_code
 from tables.users import User
 from tables.active_orders import ActiveOrder
+from tables.history_orders import HistoryOrder
 from tables.posted_orders import PostedOrder
-
+from utils.get_users import get_all_users
+from utils.add_executer_value import add_exec_val
 bl = Blueprint("user_page", __name__)
 
 
@@ -98,6 +100,7 @@ def log_out():
 def home_page():
     if 'login' in session:
         user = User.query.filter_by(id=session['user_id']).first()
+        print(user.role)
         if user.role == 'Customer':
             return render_template("customer_home_page.html")
         elif user.role == "Executor":
@@ -115,7 +118,7 @@ def home_page():
 def order_lists():
     if 'login' in session:
         user = User.query.filter_by(id=session['user_id']).first()
-        if user.role == "Executor":
+        if user.role == "Executor" or user.role == "Admin":
             orders = PostedOrder.query.all()
             return render_template("see_order_lists.html", orders=orders)
 
@@ -153,10 +156,10 @@ def finish_order():
         if user.role == "Customer":
             order = ActiveOrder.query.filter_by(id=order_id).first()
             if order.customer.user_id == user.id:
-                order.finish_order()
+                h_id = order.finish_order()
                 db.session.delete(order)
                 db.session.commit()
-                return redirect("/home")
+                return redirect("/rating_add?oder_id="+str(h_id))
         elif user.role == "Executor":
             order = ActiveOrder.query.filter_by(id=order_id).first()
             if order.executor.user_id == user.id:
@@ -218,5 +221,61 @@ def active_orders():
         if user.role == "Customer":
             orders = ActiveOrder.query.filter_by(customer_id=user.customer_id()).all()
             return render_template("customer_active_orders.html", orders=orders)
+
+    return render_template("404_exception.html")
+
+
+@bl.route("/all_users")
+def see_all_users():
+    if 'login' in session:
+        user = User.query.filter_by(id=session['user_id']).first()
+        if user.role == "Admin":
+            users = get_all_users()
+            return render_template("all_users.html", users=users)
+
+    return render_template("404_exception.html")
+
+
+@bl.route("/rating_add")
+def improve_rating():
+    if 'login' in session:
+        user = User.query.filter_by(id=session['user_id']).first()
+        if user.role == "Customer":
+            if request.method == "POST":
+                user_id = session["executor_id"]
+                order_id = session["order_id"]
+                order = HistoryOrder.query.filter_by(id=order_id)
+                if len(order) > 0:
+                    if order.first().customer_id == session['user_id'] and order.first().executor_id == session['executor_id']:
+                        value = request.form.get("rank")
+                        add_exec_val(user_id, value)
+                        return redirect("/my_orders")
+            else:
+                order_id = request.args.get("order_id")
+                if order_id is not None:
+                    order = HistoryOrder.query.filter_by(id=order_id)
+                    if len(order) > 0:
+                        session['order_id'] = order_id
+                        session['executor_id'] = order.executor_id
+                        return render_template("ch_rank_user.html")
+
+    return render_template("404_exception.html")
+
+
+@bl.route("/change_rating")
+def admin_rating():
+    if 'login' in session:
+        user = User.query.filter_by(id=session['user_id']).first()
+        if user.role == "Admin":
+            if request.method == "POST":
+                user_id = session["executor_id"]
+                value = request.form.get("rank")
+                add_exec_val(user_id, value)
+                return redirect("/all_users")
+            else:
+                user_id = request.args.get("exec_id")
+                if user_id is not None:
+                    session['executor_id'] = user_id
+                    return render_template("ch_rank_adm.html")
 
     return render_template("404_exception.html")

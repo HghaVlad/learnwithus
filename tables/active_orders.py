@@ -35,3 +35,4 @@ class ActiveOrder(db.Model):
         history_oder.make(self)
         db.session.add(history_oder)
         db.session.commit()
+        return history_oder.id

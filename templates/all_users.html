@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+<body>
+  <div class="root">
+
+        <div class="header">
+            <a class="logo" href="/LWU/static"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/home">Главная</a>
+            <a class="LS" href="/logout">Выход</a>
+        </div>
+
+        <div class="main-for-text">
+            <p class="main-text" style="margin-top: 4rem; margin-left: auto; margin-right: auto;">Все пользователи</p>
+        </div>
+        {% for user in users %}
+            <div class="mini-main">
+                <p class="fort-text">ФИО:</p> <p class="fort-text"> {{ user.name }} </p>
+                <p class="fort-text">Класс:</p> <p class="fort-text"> {{ user.grade }} </p>
+                <p class="fort-text">Рейтинг</p> <p class="fort-text"> {{ user.rating }} </p>
+                <p class="fort-text">Логин</p> <p class="fort-text"> {{ user.login }} </p>
+                {% if user.role == "Executor" %}
+                    <p class="fort-text"><a href="/change_rating?executor_id={{ user.id }}">Изменить рейтинг </a> </p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

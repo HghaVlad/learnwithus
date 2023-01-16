@@ -41,6 +41,7 @@ class User(db.Model):
         self.set_password(password)
         self.role = 'Executor'
         db.session.add(self)
+        db.session.commit()
         new_executor = Executor()
         new_executor.new_executor(name, surname, grade, self.id)
         db.session.add(new_executor)

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Оценкка объяснений</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+</head>
+<body>
+  <div class="root">
+
+      <div class="header">
+          <a class="logo" href="/LWU/static"><img src="static/images/LWU_pic.jpg"></a>
+          <a class="LS" href="/home">Главная</a>
+          <a class="LS" href="/logout">Выход</a>
+      </div>
+
+      <div class="main-login">
+         <p class="login-text">Оцените нашу помощь вам</p>
+         <form action="/" method="post" class="login-form">
+             <input class="LG" placeholder="Введите чило для изменения (0-3)" name="rank" id="rank" required>
+             <input class="login_btn" type="submit" value="Отправить">
+         </form>
+      </div>
+
+      <div class="footer">
+          <p class="footer-text">Контакты: 8-800-555-35-25</p>
+      </div>
+
+    </div>
+</body>
+</html>
