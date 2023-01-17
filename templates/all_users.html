@@ -19,6 +19,7 @@
             <p class="main-text" style="margin-top: 4rem; margin-left: auto; margin-right: auto;">Все пользователи</p>
         </div>
         {% for user in users %}
+            {% if user.role != "Admin" %}
             <div class="mini-main">
                 <p class="fort-text">ФИО:</p> <p class="fort-text"> {{ user.name }} </p>
                 <p class="fort-text">Класс:</p> <p class="fort-text"> {{ user.grade }} </p>
@@ -28,6 +29,7 @@
                     <p class="fort-text"><a href="/change_rating?executor_id={{ user.id }}">Изменить рейтинг </a> </p>
                 {% endif %}
             </div>
+            {% endif %}
         {% endfor %}
 
     </div>
