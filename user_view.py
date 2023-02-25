@@ -57,7 +57,7 @@ def reg_page():
                 res = check_code(code)
                 if res == 'no' or len(password) < 6 or len(User.query.filter_by(login=login).all()) == 1 \
                         or len(name) < 4 or len(surname) < 4:
-                    return render_template("login_page.html", answer="Incorrect code or not all fields completed right"), 403
+                    return render_template("reg_page.html", answer="Неверный код или не все поля заполнены"), 403
                 elif res == 'Admin':
                     new_user = User()
                     new_user.reg_admin(login, password)
@@ -79,12 +79,12 @@ def reg_page():
                     session['user_id'] = new_user.id
                     return redirect("/home")
                 elif len(password) < 6:
-                    return render_template("reg_page.html", answer="Length of the pass should be more than 6")
-                elif len(User.query.filter_by(login=login).all()) == 0:
-                    return render_template("reg_page.html", answer="This login is already taken")
+                    return render_template("reg_page.html", answer="Пароль должен быть длинной больше 6 символов")
+                elif len(User.query.filter_by(login=login).all()) != 0:
+                    return render_template("reg_page.html", answer="Данный логин уже занят")
                 elif len(name) < 4 or len(surname) < 4:
-                    return render_template("reg_page.html", answer="Length of the name and second name should be more than 4")
-            return render_template("reg_page.html", answer="Complete all fields. Be sure that size of login, name and second_name is more than 4. And the password's lenght is more than 6.  "), 403
+                    return render_template("reg_page.html", answer="Длина имени и фамилии должна быть больше 4 символов")
+            return render_template("reg_page.html", answer="Заполните все поля. Проверьте, чтобы длина логина, имени и Фамилии больше 4 символов. А длина пароля больше 6."), 403
         else:
             return render_template("reg_page.html")
 
@@ -159,7 +159,7 @@ def finish_order():
                 h_id = order.finish_order()
                 db.session.delete(order)
                 db.session.commit()
-                return redirect("/rating_add?oder_id="+str(h_id))
+                return redirect("/rating_add?order_id="+str(h_id))
         elif user.role == "Executor":
             order = ActiveOrder.query.filter_by(id=order_id).first()
             if order.executor.user_id == user.id:
@@ -236,7 +236,7 @@ def see_all_users():
     return render_template("404_exception.html")
 
 
-@bl.route("/rating_add")
+@bl.route("/rating_add", methods=["POST", "GET"])
 def improve_rating():
     if 'login' in session:
         user = User.query.filter_by(id=session['user_id']).first()
@@ -244,7 +244,7 @@ def improve_rating():
             if request.method == "POST":
                 user_id = session["executor_id"]
                 order_id = session["order_id"]
-                order = HistoryOrder.query.filter_by(id=order_id)
+                order = HistoryOrder.query.filter_by(id=order_id).all()
                 if len(order) > 0:
                     if order.first().customer_id == session['user_id'] and order.first().executor_id == session['executor_id']:
                         value = request.form.get("rank")
@@ -253,10 +253,10 @@ def improve_rating():
             else:
                 order_id = request.args.get("order_id")
                 if order_id is not None:
-                    order = HistoryOrder.query.filter_by(id=order_id)
+                    order = HistoryOrder.query.filter_by(id=order_id).all()
                     if len(order) > 0:
                         session['order_id'] = order_id
-                        session['executor_id'] = order.executor_id
+                        session['executor_id'] = order[0].executor_id
                         return render_template("ch_rank_user.html")
 
     return render_template("404_exception.html")

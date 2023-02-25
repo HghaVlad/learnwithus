@@ -13,11 +13,15 @@
 
       <div class="header">
             <a class="logo" href="/"><img src="static/images/LWU_pic.jpg"></a>
+            <a class="LS" href="/">Главная</a>
             <a class="LS" href="/login">Вход</a>
       </div>
 
       <div class="main-login">
         <p class="login-text">Регистрация</p>
+          {% if answer is not none %}
+            <p class="login-text" style="padding: 10px; color: red">{{ answer }}</p>
+          {% endif %}
         <form method="post" class="login-form">
             <input class="LG" placeholder="Логин" name="user_login" id="user_login" required>
             <input class="LG" placeholder="Пароль" type="password" name="user_password" id="user_password" required>
